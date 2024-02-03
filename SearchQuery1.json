@@ -1,0 +1,25 @@
+#! movies that mentions assassination, to give higher relevance to movies that mention Abraham Lincoln:
+GET movies/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "match": {
+            "Plot": {
+              "query": "assassination"
+            }
+          }
+        },
+        {
+          "match": {
+            "Plot_ner": {
+              "query": "Abraham Lincoln;",
+              "boost": 2.0
+            }
+          }
+        }
+      ]
+    }
+  }
+}

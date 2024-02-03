@@ -1,0 +1,40 @@
+#! Movies that excludes movies with an "unknown" genre and includes only movies between 1920 and 1930 and starts with Ho, with the newest movies appearing first:
+GET movies/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "range": {
+            "Release Year": {
+              "gte": 1920,
+              "lte": 1930
+            }
+          }
+        },
+        {
+          "prefix": {
+            "Title.raw": {
+              "value": "Ho"
+            }
+          }
+        }
+      ],
+      "must_not": [
+        {
+          "query_string": {
+            "default_field": "Genre.lowercase",
+            "query": "unknown"
+          }
+        }
+      ]
+    }
+  },
+  "sort": [
+    {
+      "Release Year": {
+        "order": "desc"
+      }
+    }
+  ]
+}

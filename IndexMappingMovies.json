@@ -1,0 +1,426 @@
+PUT /movies
+{
+  "mappings": {
+    "properties": {
+      "Release Year": {
+        "type": "date",
+        "format": "yyyy"
+      },
+      "Title": {
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          },
+          "basic": {
+            "type": "text",
+            "analyzer": "basic_analyzer"
+          },
+          "ngram": {
+            "type": "text",
+            "analyzer": "ngram_analyzer"
+          },
+          "stemmer": {
+            "type": "text",
+            "analyzer": "stemmer_analyzer"
+          },
+          "stopwords": {
+            "type": "text",
+            "analyzer": "stopwords_analyzer"
+          },
+          "lowercase": {
+            "type": "text",
+            "analyzer": "lowercase_analyzer"
+          },
+          "asciifolding": {
+            "type": "text",
+            "analyzer": "asciifolding_analyzer"
+          },
+          "synonym": {
+            "type": "text",
+            "analyzer": "synonym_analyzer"
+          }
+        },
+        "similarity": "scripted_similarity"
+      },
+      "Origin/Ethnicity": {
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          },
+          "basic": {
+            "type": "text",
+            "analyzer": "basic_analyzer"
+          },
+          "ngram": {
+            "type": "text",
+            "analyzer": "ngram_analyzer"
+          },
+          "lowercase": {
+            "type": "text",
+            "analyzer": "lowercase_analyzer"
+          },
+          "stemmer": {
+            "type": "text",
+            "analyzer": "stemmer_analyzer"
+          }
+        },
+        "similarity": "scripted_similarity"
+      },
+      "Director": {
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          },
+          "basic": {
+            "type": "text",
+            "analyzer": "basic_analyzer"
+          },
+          "ngram": {
+            "type": "text",
+            "analyzer": "ngram_analyzer"
+          },
+          "splitter": {
+            "type": "text",
+            "analyzer": "splitter_analyzer"
+          },
+          "lowercase": {
+            "type": "text",
+            "analyzer": "lowercase_analyzer"
+          },
+          "asciifolding": {
+            "type": "text",
+            "analyzer": "asciifolding_analyzer"
+          },
+          "unique": {
+            "type": "text",
+            "analyzer": "unique_analyzer"
+          },
+          "stemmer": {
+            "type": "text",
+            "analyzer": "stemmer_analyzer"
+          }
+        },
+        "similarity": "scripted_similarity"
+      },
+      "Cast": {
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          },
+          "basic": {
+            "type": "text",
+            "analyzer": "basic_analyzer"
+          },
+          "ngram": {
+            "type": "text",
+            "analyzer": "ngram_analyzer"
+          },
+          "splitter": {
+            "type": "text",
+            "analyzer": "splitter_analyzer"
+          },
+          "lowercase": {
+            "type": "text",
+            "analyzer": "lowercase_analyzer"
+          },
+          "asciifolding": {
+            "type": "text",
+            "analyzer": "asciifolding_analyzer"
+          },
+          "unique": {
+            "type": "text",
+            "analyzer": "unique_analyzer"
+          },
+          "stemmer": {
+            "type": "text",
+            "analyzer": "stemmer_analyzer"
+          }
+        },
+        "similarity": "scripted_similarity"
+      },
+      "Genre": {
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          },
+          "lowercase": {
+            "type": "text",
+            "analyzer": "lowercase_analyzer"
+          },
+          "ngram": {
+            "type": "text",
+            "analyzer": "ngram_analyzer"
+          },
+          "stemmer": {
+            "type": "text",
+            "analyzer": "stemmer_analyzer"
+          }
+        },
+        "similarity": "scripted_similarity"
+      },
+      "Wiki Page": {
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          },
+          "url": {
+            "type": "text",
+            "analyzer": "url_analyzer"
+          }
+        }
+      },
+      "Plot": {
+        "type": "text",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          },
+          "basic": {
+            "type": "text",
+            "analyzer": "basic_analyzer"
+          },
+          "ngram": {
+            "type": "text",
+            "analyzer": "ngram_analyzer"
+          },
+          "stemmer": {
+            "type": "text",
+            "analyzer": "stemmer_analyzer"
+          },
+          "unique": {
+            "type": "text",
+            "analyzer" : "unique_analyzer"
+          },
+          "stopwords": {
+            "type": "text",
+            "analyzer" : "stopwords_analyzer"
+          },
+          "lowercase": {
+            "type": "text",
+            "analyzer": "lowercase_analyzer"
+          },
+          "asciifolding": {
+            "type": "text",
+            "analyzer": "asciifolding_analyzer"
+          },
+          "ngram_stemmer": {
+            "type" : "text",
+            "analyzer" : "ngram_stemmer_analyzer"
+          },
+          "synonym": {
+            "type": "text",
+            "analyzer": "synonym_analyzer"
+          },
+          "all": {
+            "type": "text",
+            "analyzer" : "all_analyzer"
+          }
+        },
+        "similarity": "scripted_similarity"
+      },
+      "Plot_ner": {
+        "type": "text",
+        "analyzer": "plot_ner_analyzer",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          },
+        "lowercase": {
+          "type": "text",
+          "analyzer": "lowercase_analyzer"
+        }
+      },
+      "similarity": "scripted_similarity"
+      }
+    }
+  },
+  "settings": {
+    "index": {
+      "max_ngram_diff": 2,
+      "similarity": {
+        "scripted_similarity": {
+          "type": "scripted",
+          "script": {
+            "source": "double idf = Math.log((field.docCount) / (term.docFreq) ); double tf = doc.freq;   return query.boost * tf * idf"
+        
+          }
+        }
+      }
+    },
+    "analysis": {
+      "analyzer": {
+        "lowercase_analyzer": {
+            "tokenizer": "standard",
+            "filter": ["lowercase"]
+          },
+          "asciifolding_analyzer": {
+            "tokenizer": "standard",
+            "filter": ["asciifolding"]
+          },
+            "plot_ner_analyzer": {
+              "tokenizer": "pattern_tokenizer",
+              "filter": [
+                "trim",      
+                "asciifolding",
+                "unique_filter"
+              ]
+          },
+          "basic_analyzer": {
+            "tokenizer": "standard",
+            "filter": [
+              "trim",
+              "lowercase",
+              "asciifolding"
+              ]
+          },
+          "unique_analyzer": {
+            "tokenizer": "standard",
+            "filter": [
+              "trim",
+              "lowercase",
+              "asciifolding",
+              "unique_filter"
+              ]
+          },
+          "splitter_analyzer": {
+            "tokenizer": "pattern_tokenizer",
+            "filter": [
+              "trim",
+              "lowercase", 
+              "asciifolding", 
+              "unique_filter"
+              ]
+          },
+          "synonym_analyzer": {
+            "tokenizer": "standard",
+            "filter": [
+              "trim",
+              "lowercase", 
+              "asciifolding", 
+              "synonym_filter"
+              ]
+          },
+          "url_analyzer": {
+            "tokenizer": "slash_tokenizer",
+            "filter": [
+              "trim",
+              "lowercase", 
+              "url_path_filter", 
+              "length_filter"
+              ]
+          },
+          "stopwords_analyzer": {
+            "tokenizer": "standard",
+            "filter": [
+              "trim",
+              "lowercase", 
+              "asciifolding", 
+              "stopwords_filter"
+              ]
+          },
+          "ngram_analyzer": {
+            "tokenizer": "standard",
+            "filter": [
+              "trim",
+              "lowercase", 
+              "asciifolding", 
+              "stopwords_filter",
+              "ngram_filter"
+              ]
+          },
+          "stemmer_analyzer": {
+            "tokenizer": "standard",
+            "filter": [
+              "trim",
+              "lowercase", 
+              "asciifolding", 
+              "stopwords_filter", 
+              "stemmer_filter"
+              ]
+          },
+          "ngram_stemmer_analyzer": {
+            "tokenizer": "standard",
+            "filter": [
+              "trim",
+              "lowercase", 
+              "asciifolding", 
+              "stopwords_filter", 
+              "stemmer_filter",
+              "ngram_filter" 
+              ]
+          },
+          "all_analyzer": {
+            "tokenizer": "standard",
+            "filter": [
+              "trim",
+              "lowercase", 
+              "asciifolding", 
+              "stopwords_filter", 
+              "stemmer_filter", 
+              "ngram_filter", 
+              "unique_filter"
+              ]
+          }
+        },
+        "tokenizer": {
+          "pattern_tokenizer": {
+            "type": "pattern",
+            "pattern": "[,;&]"
+          },
+          "slash_tokenizer": {
+            "type": "path_hierarchy",
+            "delimiter": "/"
+          }
+        },
+        "filter": {
+          "stopwords_filter": {
+            "type": "stop",
+            "stopwords": "_english_",
+            "ignore_case": true
+          },
+          "stemmer_filter": {
+            "type": "stemmer",
+            "name": "porter2"
+          },
+          "ngram_filter": {
+            "type": "ngram",
+            "min_gram": 3,
+            "max_gram": 5
+          },
+          "unique_filter": {
+            "type": "unique",
+            "only_on_same_position": false
+          },
+          "url_path_filter": {
+            "type": "pattern_replace",
+            "pattern": "^[a-zA-Z]+:(//)?",
+            "replacement": ""
+          },
+          "length_filter": {
+            "type": "length",
+            "min": 4
+          },
+          "synonym_filter": {
+            "type": "synonym",
+            "synonyms": [
+              "night before christmas => christmas eve",
+              "drunkard's reformation => redemption",
+              "biography, life story => biography",
+              "crime, criminal => crime",
+              "history, historical => history",
+              "sport, athletic => sport",
+              "revenge, retaliation => revenge",
+              "exorcism, possession => exorcism",
+              "fairy tale, folklore => fairy tale"
+            ]
+          }
+        }
+      }
+    }
+  }

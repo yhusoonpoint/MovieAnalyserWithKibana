@@ -1,0 +1,79 @@
+#! find all movie directed by Edwin Porter that is about folklore or movies directed by either him or D Griffith that is about western
+GET movies/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "bool": {
+            "must": [
+              {
+                "match": {
+                  "Director": {
+                    "query": "D Griffith",
+                    "operator": "and",
+                    "boost": 1
+                  }
+                }
+              },
+              {
+                "bool": {
+                  "filter": [
+                    {
+                      "multi_match": {
+                        "query": "western",
+                        "fields": [
+                          "Plot.lowercase",
+                          "Genre.lowercase"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "bool": {
+            "must": [
+              {
+                "match": {
+                  "Director": {
+                    "query": "Edwin Porter",
+                    "operator": "and",
+                    "boost": 2
+                  }
+                }
+              },
+              {
+                "bool": {
+                  "should": [
+                    {
+                      "multi_match": {
+                        "query": "western",
+                        "fields": [
+                          "Plot",
+                          "Genre.lowercase"
+                       ]
+                      }
+                    },
+                    {
+                      "multi_match": {
+                        "query": "folklore^2",
+                        "fields": [
+                          "Plot.lowercase", 
+                          "Plot.synonym"
+                          ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
